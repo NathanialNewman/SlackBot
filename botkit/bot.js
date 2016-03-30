@@ -63,12 +63,12 @@ This bot demonstrates many of the core features of Botkit:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-
 if (!process.env.token) {
-    console.log('Error: Specify token in environment');
+    bot.botkit.log('Error: Specify token in environment');
     process.exit(1);
 }
 
+var request = require('request');
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
 
@@ -80,6 +80,15 @@ var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
+
+controller.hears(['queue schedule'],'direct_message,direct_mention,mention',function(bot,message) {
+    
+    bot.reply(message, 'The Queue Schedule for today is:');
+    request.post('http://0.0.0.0:3000/api/people/test', function(error, response, body) {
+        bot.reply(message, body);
+    });
+
+});
 
 controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function(bot, message) {
 
