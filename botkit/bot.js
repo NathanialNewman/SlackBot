@@ -85,7 +85,15 @@ controller.hears(['queue schedule'],'direct_message,direct_mention,mention',func
     
     bot.reply(message, 'The Queue Schedule for today is:');
     request.post('http://0.0.0.0:3000/api/people/test', function(error, response, body) {
-        bot.reply(message, body);
+        out = JSON.parse(body);
+        outText = out.text;
+        messageOut = '';
+        for (var i in outText){
+            messageString = outText[i].start +', '+ outText[i].end + ' - ' + outText[i].name;
+            bot.botkit.log(outText[i].name +',' + outText[i].start +','+ outText[i].end);
+            messageOut += messageString +'\n';
+        }
+        bot.reply(message, messageOut);
     });
 
 });
